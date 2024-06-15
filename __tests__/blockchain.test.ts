@@ -1,0 +1,66 @@
+import Block from "../src/lib/block";
+import Blockchain from "../src/lib/blockchain";
+import { describe, test, expect } from "@jest/globals";
+
+describe("Blockchain tests", () => {
+    
+    test("Blockchain constructor", () => {
+        const blockchain = new Blockchain();
+        expect(blockchain.chain.length).toBe(1);
+        expect(blockchain.chain[0].data).toBe("Genesis block");
+    });
+
+    test("Blockchain addBlock", () => {
+        const blockchain = new Blockchain();
+        const block = new Block(1, "data123", blockchain.getLatestBlock().hash);
+        expect(blockchain.addBlock(block)).toBe(true);
+        expect(blockchain.chain.length).toBe(2);
+    });
+
+    test("Blockchain addBlock invalid block", () => {
+        const blockchain = new Blockchain();
+        const block = new Block(1, "data123", blockchain.getLatestBlock().hash);
+        block.data = ""; // This won't change the hash validity unless calculateHash is called after modifying data
+        block.hash = block.calculateHash(); // Recalculate the hash after modifying data to simulate an invalid block
+        expect(blockchain.addBlock(block)).toBe(false);
+        expect(blockchain.chain.length).toBe(1);
+    });
+
+    test("Blockchain addBlock invalid index", () => {
+        const blockchain = new Blockchain();
+        const block = new Block(2, "data123", blockchain.getLatestBlock().hash);
+        expect(blockchain.addBlock(block)).toBe(false);
+        expect(blockchain.chain.length).toBe(1);
+    });
+
+    test("Blockchain addBlock invalid previousHash", () => {
+        const blockchain = new Blockchain();
+        const block = new Block(1, "data123", "invalid hash");
+        expect(blockchain.addBlock(block)).toBe(false);
+        expect(blockchain.chain.length).toBe(1);
+    });
+
+    test("Blockchain isValid", () => {
+        const blockchain = new Blockchain();
+        const block = new Block(1, "data123", blockchain.getLatestBlock().hash);
+        blockchain.addBlock(block);
+        expect(blockchain.isValid()).toBe(true);
+    });
+
+    test("Blockchain isValid invalid previousHash", () => {
+        const blockchain = new Blockchain();
+        const blockOne = new Block(0, "data123", blockchain.getLatestBlock().hash);
+        blockchain.addBlock(blockOne);
+        const blockTwo = new Block(1, "data12345", "invalid hash");
+        blockchain.addBlock(blockTwo); // This should be false, as it has an invalid previous hash
+        expect(blockchain.chain.length).toBe(2); // Block should not be added
+        expect(blockchain.isValid()).toBe(false); // Blockchain should be invalid
+    });
+
+    test("Blockchain getLatestBlock", () => {
+        const blockchain = new Blockchain();
+        const block = new Block(1, "data123", blockchain.getLatestBlock().hash);
+        blockchain.addBlock(block);
+        expect(blockchain.getLatestBlock()).toBe(block);
+    });
+});
