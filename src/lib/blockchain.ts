@@ -12,13 +12,13 @@ export default class Blockchain {
     
     addBlock(block: Block): Validation {
         const latestBlock = this.getLatestBlock();
-
+        
         // Check if the block's index is valid
         if (block.index !== latestBlock.index + 1) {
             return new Validation(false, 'Invalid index');
         }
-
-        // Check if the block's previousHash matches the latest block's hash
+        console.log('block.previousHash', block.previousHash);
+            // Check if the block's previousHash matches the latest block's hash
         if (block.previousHash !== latestBlock.hash) {
             return new Validation(false, 'Invalid previous hash');
         }

@@ -35,7 +35,7 @@ export default class Block {
         if(this.timestamp < 0) return new Validation(false, 'Invalid timestamp');
         if(this.data === '') return new Validation(false, 'Invalid data');
         if(this.hash !== this.calculateHash()) return new Validation(false, 'Invalid hash');
-        if(this.previousHash === '' && this.index !== 0) return new Validation(false, 'Invalid previous hash');
+        // if(this.previousHash === '' && this.index !== 0) return new Validation(false, 'Invalid previous hash');
         return new Validation();
     }
 
