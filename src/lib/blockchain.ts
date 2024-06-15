@@ -1,4 +1,5 @@
 import Block from "./block";
+import Validation from "./validation";
 
 export default class Blockchain {
     chain: Block[];
@@ -9,48 +10,52 @@ export default class Blockchain {
         this.nextIndex = 1;  
     }
     
-    addBlock(block: Block): boolean {
+    addBlock(block: Block): Validation {
         const latestBlock = this.getLatestBlock();
 
         // Check if the block's index is valid
         if (block.index !== latestBlock.index + 1) {
-            return false;
+            return new Validation(false, 'Invalid index');
         }
 
         // Check if the block's previousHash matches the latest block's hash
         if (block.previousHash !== latestBlock.hash) {
-            return false;
+            return new Validation(false, 'Invalid previous hash');
         }
 
         // Check if the block's hash is valid
         if (!block.isValid()) {
-            return false;
+            return new Validation(false, 'Invalid hash');
         }
 
         this.chain.push(block);
         this.nextIndex++;
-        return true;
+        return new Validation();
     }
 
     getLatestBlock(): Block {
         return this.chain[this.chain.length - 1];
     }
 
-    isValid(): boolean {
+    isValid(): Validation {
         for (let i = 1; i < this.chain.length; i++) {
             const currentBlock = this.chain[i];
             const previousBlock = this.chain[i - 1];
 
             if (!currentBlock.isValid()) {
-                return false;
+                return new Validation(false, `Block at index ${i} is invalid`);
             }
 
             if (currentBlock.previousHash !== previousBlock.hash) {
-                return false;
+                return new Validation(false, `Block at index ${i} has invalid previous hash`);
             }
         }
-        return true;
+        return new Validation();
     }
+
+    getBlockByHash(hash: string): Block | undefined {
+        return this.chain.find(block => block.hash === hash);
+    }           
 }
 
 

@@ -44,7 +44,7 @@ describe("Blockchain tests", () => {
         const blockchain = new Blockchain();
         const block = new Block(1, "data123", blockchain.getLatestBlock().hash);
         blockchain.addBlock(block);
-        expect(blockchain.isValid()).toBe(true);
+        expect(blockchain.isValid().sucess).toBe(true);
     });
 
     test("Blockchain isValid invalid previousHash", () => {
@@ -54,7 +54,7 @@ describe("Blockchain tests", () => {
         const blockTwo = new Block(1, "data12345", "invalid hash");
         blockchain.addBlock(blockTwo); // This should be false, as it has an invalid previous hash
         expect(blockchain.chain.length).toBe(2); // Block should not be added
-        expect(blockchain.isValid()).toBe(false); // Blockchain should be invalid
+        expect(blockchain.isValid().sucess).toBe(false); // Blockchain should be invalid
     });
 
     test("Blockchain getLatestBlock", () => {

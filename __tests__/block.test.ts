@@ -19,25 +19,25 @@ describe('Block tests', () => {
 
     test('Block isValid with invalid index', () => {
         const b = new Block(-1, "data123");
-        expect(b.isValid()).toBe(false);
+        expect(b.isValid().sucess).toBe(false);
     });
 
     test('Block isValid with invalid timestamp', () => {
         const b = new Block(1, "data123");
         b.timestamp = -1;
-        expect(b.isValid()).toBe(false);
+        expect(b.isValid().sucess).toBe(false);
     });
 
     test('Block isValid with invalid data', () => {
         const b = new Block(1, "data123");
         b.data = '';
-        expect(b.isValid()).toBe(false);
+        expect(b.isValid().sucess).toBe(false);
     });
 
     test('Block isValid with invalid hash', () => {
         const b = new Block(1, "data123");
         b.hash = 'invalid hash';
-        expect(b.isValid()).toBe(false);
+        expect(b.isValid().sucess).toBe(false);
     });
 
 
@@ -46,20 +46,20 @@ describe('Block tests', () => {
         const b = new Block(1, "data123");
         const c = new Block(2, "data123", "invalid hash");
         c.previousHash = '';
-        expect(c.isValid()).toBe(false);
+        expect(c.isValid().sucess).toBe(false);
     
     });
 
     test('Block isValid with valid block', () => {
         const b = new Block(1, "data123");
         const c = new Block(2, "data123", b.hash);
-        expect(c.isValid()).toBe(true);
+        expect(c.isValid().sucess).toBe(true);
     });
 
     test('Block isValid previousHash', () => {
         const b = new Block(1, "data123");
         const c = new Block(2, "data123", "");
-        expect(c.isValid()).toBe(false);
+        expect(c.isValid().sucess).toBe(false);
     });
 
 
