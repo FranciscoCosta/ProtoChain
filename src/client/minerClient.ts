@@ -31,12 +31,12 @@ async function mine(){
         TotalMined++;
         console.log('Total blocks mined', TotalMined);
     }catch(e : any){
-        
+        console.log('Error sending block to blockchain', e.response.data);
 
     }
     setTimeout(() => {
         mine();
-    }, 5000);
+    }, 1000);
 }
 
 mine();
